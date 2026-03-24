@@ -41,6 +41,11 @@ function App() {
   }
 
 
+  const limpiar = () => {
+  setResultado(0);
+}
+
+
 
 
   //codigo pra el administrador de tareas
@@ -54,6 +59,42 @@ function App() {
       setTarea("");
     }
   }
+
+  // eliminar tarea
+const eliminarTarea = (index) => {
+  setTareas(tareas.filter((_, i) => i !== index));
+};
+
+// finalizar tarea
+const finalizarTarea = (index) => {
+  const nuevas = tareas.map((t, i) =>
+    i === index ? { ...t, finalizada: true } : t
+  );
+  setTareas(nuevas);
+};
+
+
+ //registro de estudiantes
+  const [nombre, setNombre] = useState("");
+  const [edad, setEdad] = useState("");
+  const [carnet, setCarnet] = useState("");
+  const [estudiantes, setEstudiantes] = useState([]);
+
+  const agregarEstudiante = () => {
+    if (nombre.trim() === "" || edad.trim() === "" || carnet.trim() === "") {
+      alert("Complete todos los campos");
+      return;
+    }
+
+    const nuevo = { nombre, edad, carnet };
+    setEstudiantes([...estudiantes, nuevo]);
+
+    // limpiar inputs
+    setNombre("");
+    setEdad("");
+    setCarnet("");
+  };
+
 
 
 
@@ -86,6 +127,15 @@ function App() {
       <Boton label="Division" onClick={dividir}/>
       <hr />
             <h2>Resultado: {resultado}</h2>
+            <Boton onClick={limpiar} texto="Limpiar" />
+
+
+
+
+
+
+
+
 
 
       <h2>TODO:Administrador de tareas</h2>
@@ -106,9 +156,64 @@ function App() {
         ))}
       </ul>
       
-            
+      <ul>
+  {tareas.map((t, index) => (
+    <li key={index} style={{ textDecoration: t.finalizada ? "line-through" : "none" }}>
+      {t.texto}
+      <Boton label="Finalizar" onClick={() => finalizarTarea(index)} />
+      <Boton label="Eliminar" onClick={() => eliminarTarea(index)} />
+    </li>
+  ))}
+  </ul>           
     </>
   )
+
+
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Registro de Estudiantes</h2>
+
+      <div>
+        <label>Nombre: </label>
+        <input
+          type="text"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label>Edad: </label>
+        <input
+          type="number"
+          value={edad}
+          onChange={(e) => setEdad(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label>Carnet: </label>
+        <input
+          type="text"
+          value={carnet}
+          onChange={(e) => setCarnet(e.target.value)}
+        />
+      </div>
+
+      <button onClick={agregarEstudiante}>Agregar</button>
+
+      <hr />
+      <h2>Listado:</h2>
+      <ul>
+        {estudiantes.map((est, index) => (
+          <li key={index}>
+            Nombre: {est.nombre} | Edad: {est.edad} | Carnet: {est.carnet}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export default App
